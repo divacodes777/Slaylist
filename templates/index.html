@@ -1,84 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Slaylist</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fraunces:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
+<header class="hero">
+  <svg class="sticker s1" viewBox="0 0 100 100" aria-hidden="true"><use href="#heart"/></svg>
+  <svg class="sticker s2" viewBox="0 0 100 100" aria-hidden="true"><use href="#cherry"/></svg>
+  <svg class="sticker s3" viewBox="0 0 100 100" aria-hidden="true"><use href="#flower"/></svg>
+  <svg class="sticker s4" viewBox="0 0 100 100" aria-hidden="true"><use href="#sparkle"/></svg>
+  <div class="hero-inner">
+    <h1>Every piece you love, in one cute place</h1>
+    <p class="sub">Paste a link from any store and it lands in your wishlist with its photo and price.</p>
+    <p class="note">paste a link, I'll do the rest</p>
+    <form action="{{ url_for('add') }}" method="post" class="add-form">
+      <input type="url" name="link" placeholder="Paste a product link..." aria-label="Product link" required>
+      <input type="text" name="name" maxlength="200" placeholder="Name it, e.g. Black fur coat" aria-label="Piece name">
+      <button type="submit">Save piece</button>
+    </form>
+  </div>
+</header>
+<div class="ribbon"></div>
 
-  <!-- sticker sprite: reuse these anywhere with <use href="#heart"> -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="heart" viewBox="0 0 100 100"><path d="M50 88C20 66 8 48 8 32 8 19 18 10 30 10c8 0 16 4 20 12 4-8 12-12 20-12 12 0 22 9 22 22 0 16-12 34-42 56z" fill="#EC5FA0" stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke"/></symbol>
-    <symbol id="star" viewBox="0 0 100 100"><path d="M50 6l12 30 32 3-24 21 8 32-28-17-28 17 8-32L6 39l32-3z" fill="#FFD166" stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke"/></symbol>
-    <symbol id="sparkle" viewBox="0 0 100 100"><path d="M50 4c4 26 20 42 46 46-26 4-42 20-46 46-4-26-20-42-46-46 26-4 42-20 46-46z" fill="#9AD0EC" stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke"/></symbol>
-    <symbol id="flower" viewBox="0 0 100 100"><g fill="#F8C8DC" stroke="#fff" stroke-width="5" paint-order="stroke"><circle cx="50" cy="26" r="20"/><circle cx="74" cy="44" r="20"/><circle cx="65" cy="72" r="20"/><circle cx="35" cy="72" r="20"/><circle cx="26" cy="44" r="20"/></g><circle cx="50" cy="50" r="13" fill="#FFD166"/></symbol>
-  </svg>
+<main class="shelf">
+  <div class="pad">
+    <div class="bar"><h2>My wardrobes</h2></div>
+    <form action="{{ url_for('new_wardrobe') }}" method="post" class="add-form board-form">
+      <input name="name" maxlength="100" placeholder="New wardrobe: Summer, Winter, Wedding season..." aria-label="Wardrobe name" required>
+      <button type="submit">Create wardrobe</button>
+    </form>
 
-  <header class="hero">
-    <svg class="sticker s1" viewBox="0 0 100 100" aria-hidden="true"><use href="#heart"/></svg>
-    <svg class="sticker s2" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
-    <svg class="sticker s3" viewBox="0 0 100 100" aria-hidden="true"><use href="#flower"/></svg>
-    <svg class="sticker s4" viewBox="0 0 100 100" aria-hidden="true"><use href="#sparkle"/></svg>
-
-    <div class="hero-inner">
-      <h1>Slaylist</h1>
-      <p class="note">paste a link, I'll do the rest</p>
-      <form action="{{ url_for('add') }}" method="post" class="add-form">
-        <input type="url" name="link" placeholder="Paste a product link..." aria-label="Product link" required>
-        <button type="submit">Add to wishlist</button>
-      </form>
-    </div>
-  </header>
-
-  <main class="shelf">
-    <div class="bar">
-      <h2>My wardrobe</h2>
-      <span>Filter by:</span>
-      <button class="chip on" data-filter="all">All</button>
-      <button class="chip" data-filter="wishlist">Wishlist</button>
-      <button class="chip" data-filter="owned">Closet</button>
-    </div>
-
-    <div class="grid">
-      {% for item in items %}
-      <article class="card" data-status="{{ item.status }}">
-        {% if item.price %}<span class="price">{{ item.price }}</span>{% endif %}
-        <div class="pic">
-          {% if item.image_url %}
-            <img src="{{ item.image_url }}" alt="{{ item.name }}" loading="lazy">
-          {% else %}
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#sparkle"/></svg>
-          {% endif %}
+    <div class="boards">
+      {% for w in wardrobes %}
+      <a class="board" href="{{ url_for('wardrobe', wardrobe_id=w.id) }}">
+        <div class="cover">
+          {% for it in w.items[:4] %}
+            {% if it.image_url %}<img src="{{ it.image_url }}" alt="">{% else %}<i></i>{% endif %}
+          {% endfor %}
         </div>
-        <h3>{{ item.name }}</h3>
-        {% if item.brand %}<p class="meta">{{ item.brand }}</p>{% endif %}
-        <p class="meta">{{ 'In my closet' if item.status == 'owned' else 'Wishlist' }}</p>
-        {% if item.link %}<a class="shop" href="{{ item.link }}" target="_blank" rel="noopener">Shop it</a>{% endif %}
-      </article>
+        <h3>{{ w.name }}</h3>
+        <p class="meta">{{ w.items|length }} pieces</p>
+      </a>
       {% else %}
-      <p class="empty">Nothing here yet. Paste your first link above!</p>
+      <p class="empty">No wardrobes yet. Create your first one above!</p>
       {% endfor %}
     </div>
-  </main>
 
-  <footer class="foot">Made with love and too many open tabs</footer>
-
-  <script>
-    document.querySelectorAll('.chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
-        chip.classList.add('on');
-        const f = chip.dataset.filter;
-        document.querySelectorAll('.card').forEach(card => {
-          card.hidden = f !== 'all' && card.dataset.status !== f;
-        });
-      });
-    });
-  </script>
-</body>
-</html>
+    <div class="bar" id="all"><h2>All saved pieces</h2></div>
+    <div class="grid">
+      {% for item in items %}{% include "_card.html" %}
+      {% else %}<p class="empty">Nothing saved yet. Paste your first link above!</p>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+{% endblock %}
