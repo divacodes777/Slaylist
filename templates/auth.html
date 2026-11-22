@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Sign up' if mode == 'signup' else 'Log in' }} · Slaylist{% endblock %}
+{% block content %}
+<header class="hero">
+  <svg class="sticker s1" viewBox="0 0 100 100" aria-hidden="true"><use href="#cherry"/></svg>
+  <svg class="sticker s4" viewBox="0 0 100 100" aria-hidden="true"><use href="#flower"/></svg>
+  <div class="hero-inner auth">
+    <h1>{{ 'Join Slaylist' if mode == 'signup' else 'Welcome back' }}</h1>
+    <p class="sub">{{ 'Save your own wardrobes and outfits.' if mode == 'signup' else 'Log in to see your wardrobes and saved outfits.' }}</p>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}<p class="flash" role="alert">{{ messages[0] }}</p>{% endif %}
+    {% endwith %}
+
+    <form class="auth-form" method="post">
+      {% if mode == 'signup' %}
+      <input type="text" name="username" placeholder="Pick a username" aria-label="Username" autocomplete="username" required>
+      {% endif %}
+      <input type="email" name="email" placeholder="Email" aria-label="Email" autocomplete="email" required>
+      <input type="password" name="password" placeholder="Password (8+ characters)" aria-label="Password" autocomplete="{{ 'new-password' if mode == 'signup' else 'current-password' }}" required>
+      <button type="submit">{{ 'Create account' if mode == 'signup' else 'Log in' }}</button>
+    </form>
+
+    <p>
+      {% if mode == 'signup' %}Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+      {% else %}New here? <a href="{{ url_for('signup') }}">Sign up</a>{% endif %}
+    </p>
+  </div>
+</header>
+<div class="ribbon"></div>
+{% endblock %}

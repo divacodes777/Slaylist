@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Slaylist{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="cut" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" seed="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="7"/>
+    </filter>
+    <symbol id="heart" viewBox="0 0 100 100"><path d="M50 88C20 66 8 48 8 32 8 19 18 10 30 10c8 0 16 4 20 12 4-8 12-12 20-12 12 0 22 9 22 22 0 16-12 34-42 56z" fill="#EF8DB3" stroke="#2A2230" stroke-width="3.5" stroke-linejoin="round"/></symbol>
+    <symbol id="star" viewBox="0 0 100 100"><path d="M50 6l12 30 32 3-24 21 8 32-28-17-28 17 8-32L6 39l32-3z" fill="#FCEEA8" stroke="#2A2230" stroke-width="3.5" stroke-linejoin="round"/></symbol>
+    <symbol id="sparkle" viewBox="0 0 100 100"><path d="M50 4c4 26 20 42 46 46-26 4-42 20-46 46-4-26-20-42-46-46 26-4 42-20 46-46z" fill="#B2D9EA" stroke="#2A2230" stroke-width="3.5" stroke-linejoin="round"/></symbol>
+    <symbol id="flower" viewBox="0 0 100 100"><g fill="#D3B3D9" stroke="#2A2230" stroke-width="3"><circle cx="50" cy="26" r="20"/><circle cx="74" cy="44" r="20"/><circle cx="65" cy="72" r="20"/><circle cx="35" cy="72" r="20"/><circle cx="26" cy="44" r="20"/></g><circle cx="50" cy="50" r="13" fill="#FCEEA8" stroke="#2A2230" stroke-width="3"/></symbol>
+    <symbol id="cherry" viewBox="0 0 100 100"><path d="M50 10C42 30 33 50 30 62M50 10C58 30 66 48 70 60" fill="none" stroke="#2A2230" stroke-width="3.5" stroke-linecap="round"/><path d="M50 10c10-6 22-4 26 4-10 6-22 4-26-4z" fill="#C4E86B" stroke="#2A2230" stroke-width="3" stroke-linejoin="round"/><g fill="#EF8DB3" stroke="#2A2230" stroke-width="3.5"><circle cx="28" cy="74" r="18"/><circle cx="72" cy="72" r="18"/></g></symbol>
+  </svg>
+
+  <nav class="topbar">
+    <div class="navl">
+      <a href="{{ url_for('discover') }}">Discover</a>
+      <a href="{{ url_for('home') }}">My wardrobes</a>
+    </div>
+    <a class="logo" href="{{ url_for('welcome') }}"><strong>slaylist</strong></a>
+    {% if current_user.is_authenticated %}
+      <form class="logout" action="{{ url_for('logout') }}" method="post">
+        <button type="submit">Log out ({{ current_user.username }})</button>
+      </form>
+    {% else %}
+      <a href="{{ url_for('login') }}">Log in</a>
+    {% endif %}
+  </nav>
+
+  {% block content %}{% endblock %}
+
+  <footer class="foot">Made with love and too many open tabs</footer>
+</body>
+</html>

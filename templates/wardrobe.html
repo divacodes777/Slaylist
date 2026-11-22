@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ wardrobe.name }} · Slaylist{% endblock %}
+{% block content %}
+<header class="hero">
+  <svg class="sticker s1" viewBox="0 0 100 100" aria-hidden="true"><use href="#flower"/></svg>
+  <svg class="sticker s4" viewBox="0 0 100 100" aria-hidden="true"><use href="#heart"/></svg>
+  <div class="hero-inner">
+    <a class="back" href="{{ url_for('home') }}">← All wardrobes</a>
+    <h1>{{ wardrobe.name }}</h1>
+    <p class="sub">{{ wardrobe.items|length }} pieces</p>
+    <form action="{{ url_for('add') }}" method="post" class="add-form">
+      <input type="hidden" name="wardrobe_id" value="{{ wardrobe.id }}">
+      <input type="url" name="link" placeholder="Paste a product link to add here..." aria-label="Product link" required>
+      <input type="text" name="name" maxlength="200" placeholder="Name it, e.g. Black fur coat" aria-label="Piece name">
+      <button type="submit">Add piece</button>
+    </form>
+  </div>
+</header>
+<div class="ribbon"></div>
+
+<main class="shelf">
+  <div class="pad">
+    <div class="bar"><h2>Pieces</h2></div>
+    <div class="grid">
+      {% for item in wardrobe.items %}{% include "_card.html" %}
+      {% else %}<p class="empty">Empty for now. Paste a link above or add saved pieces below.</p>
+      {% endfor %}
+    </div>
+
+    {% if available %}
+    <div class="bar"><h2>Add saved pieces</h2></div>
+    <form action="{{ url_for('add_pieces', wardrobe_id=wardrobe.id) }}" method="post">
+      <div class="picker">
+        {% for item in available %}
+        <label class="pick">
+          <input type="checkbox" name="item_ids" value="{{ item.id }}">
+          <span class="thumb">{% if item.image_url %}<img src="{{ item.image_url }}" alt="">{% endif %}</span>
+          {{ item.name }}
+        </label>
+        {% endfor %}
+      </div>
+      <button class="shop" type="submit">Add selected</button>
+    </form>
+    {% endif %}
+  </div>
+</main>
+
+<section class="peri">
+  <div class="cloud">
+    <h2>Outfits</h2>
+    <p>Soon you'll combine pieces from this wardrobe into outfits and save them here.</p>
+  </div>
+</section>
+{% endblock %}

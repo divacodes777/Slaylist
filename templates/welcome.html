@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="hero">
+  <svg class="sticker s1" viewBox="0 0 100 100" aria-hidden="true"><use href="#heart"/></svg>
+  <svg class="sticker s2" viewBox="0 0 100 100" aria-hidden="true"><use href="#cherry"/></svg>
+  <svg class="sticker s3" viewBox="0 0 100 100" aria-hidden="true"><use href="#flower"/></svg>
+  <svg class="sticker s4" viewBox="0 0 100 100" aria-hidden="true"><use href="#sparkle"/></svg>
+  <div class="hero-inner">
+    <h1>Your wardrobe, but make it a mood board</h1>
+    <p class="sub">Save pieces from any store, build outfits, and peek at what everyone else is wearing, with shop links.</p>
+    <p class="note">slay your list</p>
+    <div class="btns">
+      <a class="btn fill" href="{{ url_for('home') }}">Start your wardrobe</a>
+      <a class="btn" href="{{ url_for('discover') }}">Browse inspo</a>
+    </div>
+  </div>
+</header>
+<div class="ribbon"></div>
+
+<section class="peri">
+  <h2 class="center">How it works</h2>
+  <div class="steps">
+    <div class="step">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#heart"/></svg>
+      <h3>Save pieces</h3>
+      <p>Paste a link from any store and give it a name. It all lives in one place.</p>
+    </div>
+    <div class="step">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#flower"/></svg>
+      <h3>Build outfits</h3>
+      <p>Sort pieces into wardrobes like Summer or Wedding season, then mix them into outfits.</p>
+    </div>
+    <div class="step">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#sparkle"/></svg>
+      <h3>Get inspo</h3>
+      <p>Browse what others are wearing and save the looks you love, with links to shop each piece.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

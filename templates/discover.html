@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Discover · Slaylist{% endblock %}
+{% block content %}
+<header class="hero">
+  <svg class="sticker s1" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
+  <svg class="sticker s4" viewBox="0 0 100 100" aria-hidden="true"><use href="#heart"/></svg>
+  <div class="hero-inner">
+    <h1>Outfit inspo</h1>
+    <p class="sub">See what everyone is wearing, with links to shop each piece.</p>
+  </div>
+</header>
+<div class="ribbon"></div>
+
+<main class="shelf">
+  <div class="pad">
+    <div class="bar">
+      <h2>Discover</h2>
+      <span>Filter by:</span>
+      <button class="chip on" data-filter="all">All</button>
+      {% for t in tags %}<button class="chip" data-filter="{{ t }}">{{ t|capitalize }}</button>{% endfor %}
+    </div>
+
+    <div class="masonry">
+      {% for o in outfits %}
+      <article class="outfit" data-tag="{{ o.tag }}">
+        <div class="look" data-color="{{ o.color }}" data-ratio="{{ o.ratio }}">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#{{ o.sticker }}"/></svg>
+        </div>
+        <h3>{{ o.title }}</h3>
+        <p class="meta">by {{ o.by }} · {{ o.tag|capitalize }}</p>
+        <ul class="wearing">
+          {% for p in o.pieces %}<li>{{ p }}</li>{% endfor %}
+        </ul>
+        <a class="heart" href="{{ url_for('login') }}" aria-label="Log in to save this outfit">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#heart"/></svg> Save
+        </a>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="meta center">These are sample outfits. Real posts will show a shop link for every piece.</p>
+  </div>
+</main>
+
+<script>
+  document.querySelectorAll('.look').forEach(el => {
+    el.style.background = el.dataset.color;
+    el.style.aspectRatio = el.dataset.ratio;
+  });
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+      chip.classList.add('on');
+      const f = chip.dataset.filter;
+      document.querySelectorAll('.outfit').forEach(o => {
+        o.hidden = f !== 'all' && o.dataset.tag !== f;
+      });
+    });
+  });
+</script>
+{% endblock %}
